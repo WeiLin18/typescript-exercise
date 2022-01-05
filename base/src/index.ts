@@ -1,5 +1,5 @@
 // -------- type annotation 類型註解
-let foo: string = 'aaa';
+let foo: string = "aaa";
 // -------- type inference 類型推斷
 let num = 123;
 
@@ -7,21 +7,21 @@ const pet: {
   type: string;
   age: number;
 } = {
-  type: 'dog',
+  type: "dog",
   age: 3,
 };
-let arr: (string | number)[] = ['a', 3];
-let arr2: string[][] = [['aa', 'bb']];
-let arr3: (string[] | string)[] = [['a'], 'a'];
-const objArr: { name: string }[] = [{ name: 'a' }];
+let arr: (string | number)[] = ["a", 3];
+let arr2: string[][] = [["aa", "bb"]];
+let arr3: (string[] | string)[] = [["a"], "a"];
+const objArr: { name: string }[] = [{ name: "a" }];
 
 // tuple 元祖 ----------------------------------------------------------------
-let list: [number, string, boolean] = [1, 'name', true];
+let list: [number, string, boolean] = [1, "name", true];
 
 // csv 常用
 let list2: [string, string, number][] = [
-  ['dell', 'male', 3],
-  ['Amy', 'female', 3],
+  ["dell", "male", 3],
+  ["Amy", "female", 3],
 ];
 
 // enum 枚舉 -------------------------------------------------------------
@@ -29,10 +29,12 @@ enum liveStatus {
   SUCCESS = 0,
   FAIL = -1,
   STREAMING = 1,
+  OFFLINE,
 }
 
 const AStatus = liveStatus.SUCCESS;
 
+console.log(liveStatus[1]);
 // union --------------------
 let aaa: number | string;
 
@@ -60,7 +62,7 @@ interface User {
 }
 
 const obj: User = {
-  name: 'John',
+  name: "John",
   age: 20,
   // hobby: 'tennis'
 };
@@ -77,15 +79,25 @@ interface Person {
   // [propName: string]: any; //可擴充新的屬性
 }
 
+interface Women extends Person {
+  weight: number;
+}
+
+const Amy: Women = {
+  name: "Amy",
+  age: 20,
+  weight: 50,
+};
+
 const callPerson = (person: Person): void => {
   console.log(person.name);
   console.log(person.age);
 };
 
-callPerson({ name: 'Jan', age: 100 });
-const AA = { name: 'AA', age: 20, sex: 'female', say: () => '3' };
+callPerson({ name: "Jan", age: 100 });
+const AA = { name: "AA", age: 20, sex: "female", say: () => "3" };
 callPerson(AA); // 若是傳變數 不會完全比對 interface
-callPerson({ name: 'AA', age: 20, sex: 'female' }); // 若是直接帶 會深層比對 interface
+callPerson({ name: "AA", age: 20, sex: "female" }); // 若是直接帶 會深層比對 interface
 
 const getPerson = (baby: { age: number }, text: string): Person => {
   return { ...baby, name: text };
@@ -105,10 +117,10 @@ class User implements Person {
 }
 
 const Minami: Teacher = {
-  name: 'Minami',
+  name: "Minami",
   age: 26,
   teach: () => {
-    console.log('japan');
+    console.log("japan");
   },
 };
 
@@ -138,7 +150,7 @@ const toNum = (str: string): number => parseInt(str);
 const toNum2: (str: string) => number = (str) => 3;
 
 function sayHello(): void {
-  console.log('hello');
+  console.log("hello");
   // return 'a'
 }
 
@@ -146,7 +158,7 @@ function errorEmitter(): never {
   // 不會跑到最後
   throw Error;
   while (true) {}
-  console.log('error');
+  console.log("error");
 }
 
 function add({ first, second }: { first: string; second: string }) {
@@ -154,7 +166,7 @@ function add({ first, second }: { first: string; second: string }) {
   return first + second;
 }
 
-add({ first: 'a', second: 'bc' });
+add({ first: "a", second: "bc" });
 
 // undefined --------------------------------------------------------------------
 function hello(name: string) {
@@ -174,10 +186,61 @@ type Data = {
 };
 
 async function fetchData() {
-  const res = await fetch('some');
+  const res = await fetch("some");
   const data = (await res.json()) as Data;
 }
 
+interface Bird {
+  canFly: boolean;
+  sing: () => {};
+}
+interface Dog {
+  canFly: boolean;
+  bark: () => {};
+}
+
+// 類型保護
+function trainAnimal(animal: Bird | Dog) {
+  if (animal.canFly) {
+    (animal as Bird).sing(); //as 語法做到類型保護
+  } else {
+    (animal as Dog).bark();
+  }
+}
+
+function trainAnimalSecond(animal: Bird | Dog): void {
+  if ("sing" in animal) {
+    //in 語法做到類型保護
+    animal.sing();
+  } else {
+    animal.bark();
+  }
+}
+
+function concatParam(first: number | string, second: number | string) {
+  //typeof 語法做到類型保護
+  if (typeof first === "string" || typeof second === "string") {
+    return `${first}${second}`;
+  } else {
+    return first + second;
+  }
+}
+
+class CountInstance {
+  count: number;
+  constructor(count: number) {
+    this.count = count;
+  }
+}
+
+function getObjectCount(
+  first: object | CountInstance,
+  second: object | CountInstance
+) {
+  if (first instanceof CountInstance && second instanceof CountInstance) {
+    return first.count + second.count;
+  }
+}
 // ----- class -----------------------------------------------------------------------
 
 // private 私有 (只能在自己class內被調用)
@@ -212,16 +275,16 @@ class Live {
   }
 }
 
-const live = new Live('1號', '001', 'female');
+const live = new Live("1號", "001", "female");
 // live.id;
 console.log(live); // 還是會印出private屬性
 
 class MyLive extends Live {
   show() {
-    return 'my' + super.show() + this.sex;
+    return "my" + super.show() + this.sex;
   }
 }
-const myLive = new MyLive('2號', '001', 'female');
+const myLive = new MyLive("2號", "001", "female");
 console.log(myLive.show());
 
 class Animal {
@@ -233,17 +296,17 @@ class Cat extends Animal {
     super(3); //若有繼承，要先在constructor super過
   }
 }
-const Doi = new Cat('doi');
+const Doi = new Cat("doi");
 console.log(Doi);
 
 class Dog {
   constructor(public _name: string) {}
   get name() {
-    return this._name + ' dog';
+    return this._name + " dog";
   }
 }
 
-const shiro = new Dog('shiro');
+const shiro = new Dog("shiro");
 console.log(shiro.name);
 
 class Only {
@@ -270,7 +333,7 @@ abstract class Geom {
   //抽象類無法直接實體化，只能繼承
   constructor(width: number) {}
   getType() {
-    return 'gemo';
+    return "gemo";
   }
   abstract getArea(): number;
 }
@@ -287,7 +350,8 @@ class Square {
 
 // ts -> .d.ts 翻譯文件 ＠types/superagent -> js
 
-// -------- 泛型-------------------------------------------------------------------------
+// -------- 泛型 generic ------------------------------------------------
+// generic 泛指的類型
 // function print<T>(data: T) {
 //   console.log('data', data);
 // }
