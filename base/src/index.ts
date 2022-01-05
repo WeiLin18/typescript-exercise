@@ -352,18 +352,39 @@ class Square {
 
 // -------- 泛型 generic ------------------------------------------------
 // generic 泛指的類型
-// function print<T>(data: T) {
-//   console.log('data', data);
-// }
+function print<T>(data: T) {
+  console.log("data", data); //not sure type
+}
 
-// print<number>(3);
+print<number>(3); //define when call the function
 
-// class Print<T> {
-//   data: T;
-//   constructor(d: T) {
-//     this.data = d;
-//   }
-// }
+class Print<T> {
+  data: T;
+  constructor(d: T) {
+    this.data = d;
+  }
+}
 
-// const p = new Print<string>('bun');
-// console.log('p', p);
+const p = new Print<string>("bun");
+console.log("p", p);
+
+function join<ABC>(first: ABC, second: ABC) {
+  return `${first}${second}`;
+}
+join<string>("1", "-2");
+
+interface Item {
+  name: string;
+}
+class DataManager<T extends Item> {
+  constructor(private data: T[]) {}
+  getItem(index: number): string {
+    return this.data[index].name;
+  }
+}
+
+const data = new DataManager([
+  {
+    name: "dell",
+  },
+]);
