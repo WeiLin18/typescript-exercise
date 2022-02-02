@@ -234,6 +234,7 @@ class CountInstance {
 }
 
 function getObjectCount(
+  //instanceof 語法做到類型保護
   first: object | CountInstance,
   second: object | CountInstance
 ) {
@@ -243,7 +244,7 @@ function getObjectCount(
 }
 // ----- class -----------------------------------------------------------------------
 
-// private 私有 (只能在自己class內被調用)
+//   私有 (只能在自己class內被調用)
 // public 公開 (default 內外調用都可)
 // protected 受保護 （允許在類內及繼承子類使用）
 
