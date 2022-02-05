@@ -389,3 +389,20 @@ const data = new DataManager([
     name: "dell",
   },
 ]);
+
+interface Person3 {
+  name: string;
+  gender: string;
+}
+class Teacher {
+  constructor(private info: Person3) {}
+  getInfo<T extends keyof Person3>(key: T): Person3[T] {
+    return this.info[key];
+  }
+}
+const sakura = new Teacher({
+  name: "sa",
+  gender: "girl",
+});
+
+const test = sakura.getInfo("name");
