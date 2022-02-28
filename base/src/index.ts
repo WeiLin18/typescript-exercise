@@ -117,6 +117,10 @@ interface Person {
   // [propName: string]: any; //可擴充新的屬性
 }
 
+let ro: ReadonlyArray<number> = [1, 2, 3];
+ro[0] = 12; // error!
+ro.push(5); // error!
+
 interface Women extends Person {
   weight: number;
 }
@@ -280,6 +284,14 @@ function getObjectCount(
     return first.count + second.count;
   }
 }
+
+const EVALUATION_FACTOR = Math.PI;
+function evaluatePrice(vehicle: Vehicle) {
+  return vehicle.capacity * EVALUATION_FACTOR;
+}
+
+const myTruck: Truck = { vType: "truck", capacity: 9.5 };
+evaluatePrice(myTruck);
 // ----- class -----------------------------------------------------------------------
 
 //   私有 (只能在自己class內被調用)
