@@ -315,6 +315,21 @@ evaluatePrice(myTruck);
 
 // 可簡化
 
+class Coffee {
+  favor: string;
+  price: number;
+  private secretMethod: string;
+  constructor(favor: string) {
+    this.price = 50;
+    this.favor = favor;
+    this.secretMethod = "some secret method";
+  }
+}
+
+const latte = new Coffee("latte");
+
+console.log(latte.price); // 50;
+console.log(latte.secretMethod); // error
 class Live {
   constructor(
     public rootName1: string,
@@ -403,6 +418,11 @@ class Square {
 
 // -------- 泛型 generic ------------------------------------------------
 // generic 泛指的類型
+// T（Type）：表示一个 TypeScript 类型
+// K（Key）：表示对象中的键类型
+// V（Value）：表示对象中的值类型
+// E（Element）：表示元素类型
+
 function print<T>(data: T) {
   console.log("data", data); //not sure type
 }
@@ -458,3 +478,52 @@ const sakura = new Teacher({
 const test = sakura.getInfo("name");
 
 // -------------- 鴨子類型（duck typing): 面向街口編程 而不是面向對象編程
+
+// typeof in typescript
+const family = {
+  count: 5,
+  haveHouse: true,
+};
+
+type Family = typeof family;
+
+type ParamType<T> = T extends (...args: infer P) => any ? P : T;
+
+// extend & infer ----------------------------------------------------------------
+interface Name {
+  firstName: string;
+  lastName: string;
+}
+
+// 使用 T extends Name，限制 T 一定要是 Name 型別的子集合
+function printName<T extends Name>(person: T) {
+  return `${person.firstName} ${person.lastName}`;
+}
+
+type ReturnType2<T> = T extends (...args: any[]) => infer R ? R : any;
+
+type func = () => number;
+type variable = string;
+type funcReturnType = ReturnType2<func>; // funcReturnType 类型为 number
+type varReturnType = ReturnType2<variable>; // varReturnType 类型为 string
+
+// before infer
+type Ids = number[];
+type Names = string[];
+
+type Unpacked<T> = T extends Names ? string : T extends Ids ? number : T;
+
+type idType = Unpacked<Ids>; // idType 类型为 number
+type nameType = Unpacked<Names>; // nameType 类型为string
+
+// after infer
+type Unpacked2<T> = T extends (infer R)[] ? R : T;
+
+type idType2 = Unpacked<Ids>; // idType 类型为 number
+type nameType2 = Unpacked<Names>; // nameType 类型为string
+
+// 取 promise<xxx> 中 xxx 類型
+type Response3 = Promise<number[]>;
+type Unpacked3<T> = T extends Promise<infer R> ? R : T;
+
+type resType = Unpacked3<Response3>; // resType 类型为number[]
