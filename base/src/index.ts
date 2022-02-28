@@ -527,3 +527,36 @@ type Response3 = Promise<number[]>;
 type Unpacked3<T> = T extends Promise<infer R> ? R : T;
 
 type resType = Unpacked3<Response3>; // resType 类型为number[]
+
+// Partial 将某个类型里的属性全部变为可选项
+
+interface Todo {
+  title: string;
+  description: string;
+}
+
+// Partial<Todo> 相當於
+// {
+//   title?: string | undefined;
+//   description?: string | undefined;
+// }
+
+const myTodo: Partial<Todo> = {
+  title: "a",
+  age: 3,
+};
+
+function updateTodo(todo: Todo, fieldsToUpdate: Partial<Todo>) {
+  return { ...todo, ...fieldsToUpdate };
+}
+
+const todo1 = {
+  title: "organize desk",
+  description: "clear clutter",
+};
+
+const todo2 = updateTodo(todo1, {
+  description: "throw out trash",
+});
+
+console.log(todo2); //{title: "organize desk", description: "throw out trash"}
