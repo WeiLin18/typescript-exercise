@@ -15,6 +15,44 @@ let arr2: string[][] = [["aa", "bb"]];
 let arr3: (string[] | string)[] = [["a"], "a"];
 const objArr: { name: string }[] = [{ name: "a" }];
 
+// any vs unknown vs never ----------------------------------------------------------
+
+// any 等於沒在檢查
+let valueAny: any;
+
+valueAny.foo.bar; // OK
+valueAny.trim(); // OK
+valueAny(); // OK
+
+// unknown 變換前檢查
+let valueUnknown: unknown;
+
+valueUnknown = 42; // OK
+valueUnknown = undefined; // OK
+let value1: unknown = valueUnknown; // OK
+let value2: any = valueUnknown; // OK
+let value3: number = valueUnknown; // Error
+value.foo.bar; // Error
+value.trim(); // Error
+value(); // Error
+
+// 返回never的函数必须存在无法达到的终点
+function error(message: string): never {
+  throw new Error(message);
+}
+
+// 利用 never 类型的特性来实现全面性检查
+type Foo = string | number;
+function controlFlowAnalysisWithNever(foo: Foo) {
+  if (typeof foo === "string") {
+    // 这里 foo 被收窄为 string 类型
+  } else if (typeof foo === "number") {
+    // 这里 foo 被收窄为 number 类型
+  } else {
+    // foo 在这里是 never
+    const check: never = foo;
+  }
+}
 // tuple 元祖 ----------------------------------------------------------------
 let list: [number, string, boolean] = [1, "name", true];
 
@@ -406,3 +444,5 @@ const sakura = new Teacher({
 });
 
 const test = sakura.getInfo("name");
+
+// -------------- 鴨子類型（duck typing): 面向街口編程 而不是面向對象編程
